@@ -1,5 +1,6 @@
 from pathlib import Path
 import os
+from PIL import Image
 
 #link to dataset https://www.kaggle.com/vermaavi/food11
 
@@ -48,27 +49,46 @@ def load_draw_data(path):
 
     return x_train, y_train, x_test, y_test
 
-def make_plates(images, labels):
+def ImagesNames_to_list(dir_path):
     """
-    Makes "plates" by scaling down pictures
-    Needs to create a backround and put plates in so that they don't overlap
+    Turns all the images in a folder into numpy rgb arrays
     
     Parameters
     ----------
-    images : string
-        The images
-
-    labels : 
-        The lables of the images 
+    path : string
+        The path to the images
     
     Returns
     -------
-    Plates
-
-    Labels
-
-    Boxes
+    Picture list : list of len #picture of arrays of shape (height, width, 3)
+        arrays of each pic in RGB
         
     """
+    picture_list = []
+    for dirname, _, filenames in os.walk(dir_path):
+        for filename in filenames:
+            picture = np.array(Image.open(os.path.join(dirname, filename)))
+            picture_list.append(picture)
+
+    return picture_list
+
+def Image_to_array(path):
+        """
+    Turns singular image into array
+
+    Parameters
+    ----------
+    path : string
+        The path to the image
+    
+    Returns
+    -------
+    Picture array (lenght, width, 3)
+    
+    """
+    picture = np.array(Image.open(path))
+    return picture
+
+
 
 
