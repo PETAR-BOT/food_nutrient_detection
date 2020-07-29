@@ -3,6 +3,10 @@ import numpy as np
 from Model import compute_detections
 from boxcomparing import non_max_suppression
 
+device = 'cuda' if torch.cuda.is_available() else 'cpu'
+train_data = torch.tensor(train_data).to(device)
+val_data = torch.tensor(val_data).to(device)
+
 def compute_recall(prediction_detections, truth_detections, threshold=0.5):
     ''' Compute the recall of predictions given targets.
 
@@ -151,3 +155,9 @@ def compute_ap(classifications, regressions, boxes, labels, nms_threshold=0.3, a
     if len(detections) > 0:
         return compute_precision(detections, truth_detections, ap_threshold)
     return 0
+
+def softmax_focal_loss(inputs, targets, alpha=1, gamma=0):
+    inputs = F.softmax(inputs, dim=1)
+    pc = inputs[(range(len(targets)), targets)]
+    return -torch.mean(alpha * (1 - pc)**gamma * torch.log(pc + 1e-08))
+
