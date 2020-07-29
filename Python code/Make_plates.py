@@ -33,7 +33,7 @@ def generate_background(image_shape=(512, 512), *, max_difference=0.1):
     return np.ones((*image_shape, 3)) * color_vector
 
 
-def make_plates(x_train, y_train):
+def make_plate(x_train, y_train):
     """
     Makes "plates" by scaling down pictures
     Needs to create a backround and put plates in so that they don't overlap
@@ -115,3 +115,15 @@ def make_plates(x_train, y_train):
 
 
     return backround_pillow, y_pics_list, boxes
+
+def generate_set(base_path, num_images):
+    labels, boxes = [], []
+    for i in range(num_images):
+        index = np.random.randint(0, num_images)
+        img, lbls, bxs = make_plate(x_train, y_train)
+        
+        plt.imsave(f'{base_path}\\images\\{i:06d}.png', img)
+        labels.append(lbls)
+        boxes.append(bxs)
+    np.save(f'{base_path}\\labels.npy', labels)
+    np.save(f'{base_path}\\boxes.npy', boxes)
