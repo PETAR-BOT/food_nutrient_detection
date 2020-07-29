@@ -125,7 +125,7 @@ def make_plate(x_train, y_train):
 def generate_plate_set(base_path, num_images, x_train, y_train):
     labels, boxes = [], []
     for i in range(num_images):
-        index = np.random.randint(0, num_images)
+        
         img, lbls, bxs = make_plate(x_train, y_train)
         
         plt.imsave(f'{base_path}\\images\\{i:06d}.png', img)
@@ -133,3 +133,5 @@ def generate_plate_set(base_path, num_images, x_train, y_train):
         boxes.append(bxs)
     np.save(f'{base_path}\\labels.npy', labels)
     np.save(f'{base_path}\\boxes.npy', boxes)
+
+def get_coord(coordxmin, coordxmax, coordymin, coordymax):
