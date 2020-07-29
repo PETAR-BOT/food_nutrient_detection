@@ -120,3 +120,11 @@ def show_from_path(path):
     imgplot = plt.imshow(img)
     plt.show()
 
+
+def generate_anchor_boxes(train_data):
+    anchor_boxes = []
+    for y in range(0, train_data.shape[2], 16):
+        for x in range(0, train_data.shape[3], 16):
+            anchor_boxes.append(np.array([-16, -16, 16, 16]) + np.array([x, y, x, y]))
+    anchor_boxes = np.vstack(anchor_boxes)
+

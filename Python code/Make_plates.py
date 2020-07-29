@@ -88,6 +88,10 @@ def make_plate(x_train, y_train):
 
 
     boxes = []
+    coordxmin = []
+    coordxmax = []
+    coordymin = []
+    coordymax = []
     for i in range(len(x_pics_string)):
 
         im = Image.open(train_dir + "\\" + x_pics_string[i])
@@ -97,11 +101,12 @@ def make_plate(x_train, y_train):
         cood_x = np.random.randint(0, (512-maxsize))
         cood_y = np.random.randint(0, (512-maxsize))
 
-        coordinates_tuple = cood_x, cood_y
-                
+        mindist = 2*maxsize/3
 
-            
-        coord = (cood_x, cood_y)
+        coordxmax.append(cood_x+ mindist)
+        coordxmin.append(cood_x-mindist)
+        coordymax.append(cood_y+mindist)
+        coordymin.append(cood_y-mindist)
         
         box = cood_x, cood_x, cood_x + maxsize, cood_y + maxsize # left, top, right, bottom
         
@@ -117,7 +122,7 @@ def make_plate(x_train, y_train):
 
     return backround_pillow, y_pics_list, boxes
 
-def generate_set(base_path, num_images, x_train, y_train):
+def generate_plate_set(base_path, num_images, x_train, y_train):
     labels, boxes = [], []
     for i in range(num_images):
         index = np.random.randint(0, num_images)
