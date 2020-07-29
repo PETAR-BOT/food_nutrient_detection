@@ -3,6 +3,7 @@ from Load_Data import train_dir
 from Load_Data import Image_to_array
 import PIL
 from PIL import Image
+import matplotlib.pyplot as plt
 
 def generate_background(image_shape=(512, 512), *, max_difference=0.1):
     ''' Generate a random background of the given shape that is a gray color with a maximum offset of
@@ -116,7 +117,7 @@ def make_plate(x_train, y_train):
 
     return backround_pillow, y_pics_list, boxes
 
-def generate_set(base_path, num_images):
+def generate_set(base_path, num_images, x_train, y_train):
     labels, boxes = [], []
     for i in range(num_images):
         index = np.random.randint(0, num_images)
