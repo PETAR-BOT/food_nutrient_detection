@@ -48,11 +48,14 @@ def make_plates(x_train, y_train):
     
     Returns
     -------
-    Plates
+    Plate
+        one Pillow with 1-3 pic on it
 
-    Labels
+    Labels: int
+        int corresponding to class
 
-    Boxes
+    Boxes : tuple[left, top, right, bottom] (ints)
+        coord of the boxes
         
     """
     #generate backround
@@ -68,42 +71,47 @@ def make_plates(x_train, y_train):
     x_pics_string = []
     y_pics_list = []
 
-
     for i in range(food_amount):
-        index = np.random.randint(0, len(x_train))
-        
-        x_pic = x_train[index]
-        x_pic_array = Image_to_array(train_dir + "\\" + x_pic)
-        
-        y_pic = y_train[index]
-        
-        
-        x_pics_list.append(x_pic_array)
-        x_pics_string.append(x_pic)
+            index = np.random.randint(0, len(x_train))
+            
+            x_pic = x_train[index]
+            x_pic_array = Image_to_array(train_dir + "\\" + x_pic)
+            
+            y_pic = y_train[index]
+            
+            
+            x_pics_list.append(x_pic_array)
+            x_pics_string.append(x_pic)
 
-        y_pics_list.append(y_pic)
+            y_pics_list.append(y_pic)
 
-    #pillow library acaling down images
-   
-    #scale down each pictue and add it to backround pillow
+
+    boxes = []
     for i in range(len(x_pics_string)):
-        coord = (100, 50)
 
         im = Image.open(train_dir + "\\" + x_pics_string[i])
 
-        maxsize = (300, 300) #max size of scaled down image
+        maxsize = np.random.randint(100, 300)
+                    
+        cood_x = np.random.randint(0, (512-maxsize))
+        cood_y = np.random.randint(0, (512-maxsize))
+
+        coordinates_tuple = cood_x, cood_y
+                
+
+            
+        coord = (cood_x, cood_y)
+        
+        box = cood_x, cood_x, cood_x + maxsize, cood_y + maxsize # left, top, right, bottom
+        
+        boxes.append(box)
+        
+        maxsize = (maxsize, maxsize) #max size of scaled down image
+
+
         im.thumbnail(maxsize, PIL.Image.ANTIALIAS) #makes im into scaled down PIL
 
-        backround_pillow.paste(im, coord) #paste image into backround PIIL
-       
-        
-
-    
-
-    
+        backround_pillow.paste(im, coord) #paste image into backround PIL
 
 
-
-    #replace backround with picture, make sure they don't overlap
-
-    #get boxes + box labels for each image in plate for truth
+    return backround_pillow, y_pics_list, boxes
