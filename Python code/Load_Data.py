@@ -1,6 +1,10 @@
 from pathlib import Path
 import os
 from PIL import Image
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.image as mpimg
+
 
 #link to dataset https://www.kaggle.com/vermaavi/food11
 
@@ -63,7 +67,7 @@ def ImagesNames_to_list(dir_path):
     Picture list : list of len #picture of arrays of shape (height, width, 3)
         arrays of each pic in RGB
         
-    """
+    """ 
     picture_list = []
     for dirname, _, filenames in os.walk(dir_path):
         for filename in filenames:
@@ -73,7 +77,7 @@ def ImagesNames_to_list(dir_path):
     return picture_list
 
 def Image_to_array(path):
-        """
+    """
     Turns singular image into array
 
     Parameters
@@ -87,8 +91,33 @@ def Image_to_array(path):
     
     """
     picture = np.array(Image.open(path))
-    return picture
+    return picture  
+
+def show_from_matrix(pic):
+    """
+    shows image from a specific matrix
+
+    Parameters
+    ---------
+    pic : np.array, (length, width, 3)
+        the matrix rep of the image
+
+    """
+    plt.imshow(pic)
+    plt.show()
 
 
+def show_from_path(path):
+    """
+    shows image from a specific path
 
+    Parameters
+    ---------
+    path : string
+        the path to the image
+
+    """
+    img=mpimg.imread(path)
+    imgplot = plt.imshow(img)
+    plt.show()
 

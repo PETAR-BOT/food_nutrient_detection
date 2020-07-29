@@ -1,6 +1,10 @@
 import numpy as np
+from Load_Data import train_dir
+from Load_Data import Image_to_array
+import PIL
+from PIL import Image
 
-def generate_background(image_shape=(64, 64), *, max_difference=0.1):
+def generate_background(image_shape=(512, 512), *, max_difference=0.1):
     ''' Generate a random background of the given shape that is a gray color with a maximum offset of
     `max_difference`.
     
@@ -29,17 +33,17 @@ def generate_background(image_shape=(64, 64), *, max_difference=0.1):
     return np.ones((*image_shape, 3)) * color_vector
 
 
-def make_plates(images, labels):
+def make_plates(x_train, y_train):
     """
     Makes "plates" by scaling down pictures
     Needs to create a backround and put plates in so that they don't overlap
     
     Parameters
     ----------
-    images : string
+    x_train : images
         The names of the image files
 
-    labels : 
+    Y_train : labels
         The lables of the images 
     
     Returns
@@ -51,11 +55,55 @@ def make_plates(images, labels):
     Boxes
         
     """
-    backround = generate_background()
+    #generate backround
+    food_amount = np.random.randint(1, 4)
 
-    
-    #take random images
+    #backround array
+    backround = generate_background()
+    #backround pillow
+    backround_pillow = Image.fromarray(np.uint8(backround)).convert('RGB') #np.unit8 converts to integers, convert('RGB') converts to RGB
+
+
+    x_pics_list = []
+    x_pics_string = []
+    y_pics_list = []
+
+
+    for i in range(food_amount):
+        index = np.random.randint(0, len(x_train))
+        
+        x_pic = x_train[index]
+        x_pic_array = Image_to_array(train_dir + "\\" + x_pic)
+        
+        y_pic = y_train[index]
+        
+        
+        x_pics_list.append(x_pic_array)
+        x_pics_string.append(x_pic)
+
+        y_pics_list.append(y_pic)
 
     #pillow library acaling down images
+   
+    #scale down each pictue and add it to backround pillow
+    for i in range(len(x_pics_string)):
+        coord = (100, 50)
+
+        im = Image.open(train_dir + "\\" + x_pics_string[i])
+
+        maxsize = (300, 300) #max size of scaled down image
+        im.thumbnail(maxsize, PIL.Image.ANTIALIAS) #makes im into scaled down PIL
+
+        backround_pillow.paste(im, coord) #paste image into backround PIIL
+       
+        
+
+    
+
+    
+
+
 
     #replace backround with picture, make sure they don't overlap
+
+    #get boxes + box labels for each image in plate for truth
